@@ -53,12 +53,11 @@ export function useState<T>(defaultValue: T): [T, (value: T, callback?: () => vo
   const setState = (value: T, callback?: () => void) => component.setState({[useStateNu]: value}, callback)
 
   const state = component.state
-  if (state.hasOwnProperty(useStateNu)) {
-    return [state[useStateNu], setState]
-  } else {
+
+  if (!state.hasOwnProperty(useStateNu)) {
     state[useStateNu] = defaultValue
-    return [defaultValue, setState]
   }
+  return [state[useStateNu], setState]
 }
 
 function isDependenciesChange(dependencies: any[] | null | undefined, lastDependencies: any[] | null | undefined) {
@@ -140,7 +139,7 @@ export function withHooks<Props>(rawRenderFunc: (props: Props) => React.ReactNod
       // 看环境是否使用了 Context
       const contexts = Object
         .getOwnPropertyNames(this.hooksContext)
-        .map((useContextNu) => [useContextNu, this.hooksContext[useContextNu][1]]) as Array<[number, React.Context<any>]>
+        .map((useContextNu) => [useContextNu, this.hooksContext[parseInt(useContextNu)][1]]) as Array<[number, React.Context<any>]>
 
       // 若使用 Context，则绑定所有 Context
       if (contexts.length > 0) {
@@ -173,7 +172,7 @@ export function withHooks<Props>(rawRenderFunc: (props: Props) => React.ReactNod
     // 清除 Effect
     public cleanupEffect() {
       for (const useEffectNu of Object.getOwnPropertyNames(this.hooksEffect)) {
-        const [cleanup] = this.hooksEffect[useEffectNu]
+        const [cleanup] = this.hooksEffect[parseInt(useEffectNu)]
         if (cleanup) {
           cleanup()
         }
@@ -199,6 +198,7 @@ export function withHooks<Props>(rawRenderFunc: (props: Props) => React.ReactNod
 
   }
 
-  Object.defineProperty(componentClass, 'name', {get: () => rawRenderFunc.name})
+  // 获取组件名
+  Object.defineProperty(componentClass, 'name', { get: () => (rawRenderFunc as any).name })
   return componentClass as any
 }
