@@ -14,7 +14,7 @@ yarn add blx-react-hooks
 在声明函数式组件的时候，通过用 `withHooks()` 函数封装就可以就使用 `useState()` / `useEffect()` / `useContext()` 三个 Hooks API 了。与 React 的 Hooks API 只差了需要 `withHooks()` 函数进行封装。
 
 ```JSX
-import {withHooks, useState} from 'react-hooks'
+import {withHooks, useState} from 'blx-react-hooks'
 
 // 如果想在调试的时候看到组件名，定义function的时候必须要定义成一个命名函数
 const Counter = withHooks(function Counter({title, initCount}) {
