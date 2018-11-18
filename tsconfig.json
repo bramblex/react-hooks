@@ -6,6 +6,6 @@
     "strict": true
   },
   "include": [
-    "index.tsx"
+    "react-hooks.tsx"
   ]
 }

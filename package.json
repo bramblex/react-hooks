@@ -1,8 +1,8 @@
 {
   "name": "react-hooks",
-  "version": "1.0.0",
-  "main": "index.js",
-  "types": "index.d.ts",
+  "version": "0.0.1",
+  "main": "react-hooks.min.js",
+  "types": "react-hooks.d.ts",
   "repository": "git@github.com:bramblex/react-hooks.git",
   "author": "乔健 <qjnight@gmail.com>",
   "license": "MIT",
