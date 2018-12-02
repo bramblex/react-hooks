@@ -22,7 +22,7 @@ export type RenderFunc<Props extends {} = {}>
     = (props: Props, ref: React.RefObject<HooksComponent<Props>>) => React.ReactNode
 
 
-function bindComponent<Props extends {}>(component: HooksComponent<Props>, renderFunc: RenderFunc<Props>) {
+export function bindComponent<Props extends {}>(component: HooksComponent<Props>, renderFunc: RenderFunc<Props>) {
     const ref = React.createRef<HooksComponent<Props>>();
     (ref as any).current = component
     return withContext(component, () => renderFunc(component.props, ref))
