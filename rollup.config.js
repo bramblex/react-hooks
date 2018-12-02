@@ -3,9 +3,9 @@ const {uglify} = require('rollup-plugin-uglify')
 import typescript from 'rollup-plugin-typescript2'
 
 export default {
-    input: 'react-hooks.tsx',
+    input: 'src/index.ts',
     output: {
-        file: 'react-hooks.min.js',
+        file: 'dist/react-hooks.min.js',
         format: 'umd',
         name: 'ReactHooks',
         sourcemap: true

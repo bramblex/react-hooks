@@ -1,8 +1,8 @@
 {
   "name": "blx-react-hooks",
   "version": "0.0.1",
-  "main": "react-hooks.min.js",
-  "types": "react-hooks.d.ts",
+  "main": "dist/react-hooks.min.js",
+  "types": "src/index.ts",
   "repository": "git@github.com:bramblex/react-hooks.git",
   "author": "乔健 <qjnight@gmail.com>",
   "license": "MIT",

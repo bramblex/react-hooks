@@ -1,11 +1,11 @@
 {
   "compilerOptions": {
     "target": "es5",
-    "declaration": true,
     "jsx": "react",
     "strict": true
   },
   "include": [
-    "react-hooks.tsx"
+    "src/*.tsx",
+    "src/*.ts"
   ]
 }
