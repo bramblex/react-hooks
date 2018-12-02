@@ -57,8 +57,11 @@ export function withHooks<Props extends {}>(renderFunc: RenderFunc<Props>): Reac
         }
 
         componentWillUpdate() {
-            runEffects(this.__hooks__.effects)
             runEffects(this.__hooks__.layoutEffects)
+        }
+
+        componentDidUpdate() {
+            runEffects(this.__hooks__.effects)
         }
 
         componentWillUnmount() {
