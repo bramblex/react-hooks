@@ -8,8 +8,9 @@ export default {
         file: 'dist/react-hooks.min.js',
         format: 'umd',
         name: 'ReactHooks',
-        sourcemap: true
+        sourcemap: true,
     },
+    external: ['react'],
     plugins: [
         typescript(),
         buble(),

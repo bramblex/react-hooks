@@ -1,108 +1,73 @@
 import * as React from 'react'
 import { HooksComponentState } from './hooks/state'
+import { HooksComponentMemos } from './hooks/memo'
+import { HooksComponentRefs, HooksComponentImperativeMethods } from './hooks/ref'
+import { HooksComponentContexts, bindContexts } from './hooks/context'
+import { HooksComponentEffects, runEffects, cleanupEffects } from './hooks/effect'
+import { withContext } from './context';
 
 export declare class HooksComponent<Props extends {} = {}> extends React.Component<Props, HooksComponentState> {
     public state: HooksComponentState
+    public __hooks__: {
+        refs: HooksComponentRefs,
+        memos: HooksComponentMemos,
+        contexts: HooksComponentContexts,
+        effects: HooksComponentEffects,
+        layoutEffects: HooksComponentEffects,
+        imperativeMethods?: HooksComponentImperativeMethods<{}>,
+    }
 }
 
-export type RenderFunc<Props extends {}>
+export type RenderFunc<Props extends {} = {}>
     = (props: Props, ref: React.RefObject<HooksComponent<Props>>) => React.ReactNode
 
 
+function bindComponent<Props extends {}>(component: HooksComponent<Props>, renderFunc: RenderFunc<Props>) {
+    const ref = React.createRef<HooksComponent<Props>>();
+    (ref as any).current = component
+    return withContext(component, () => renderFunc(component.props, ref))
+}
+
 export function withHooks<Props extends {}>(renderFunc: RenderFunc<Props>): React.ComponentClass<Props, HooksComponentState> {
     const HooksComponentClass = class extends React.Component<Props, HooksComponentState> {
+        public state: HooksComponent['state'] = {}
+        public __hooks__: HooksComponent['__hooks__'] = {
+            effects: {},
+            layoutEffects: {},
+            refs: {},
+            contexts: {},
+            memos: {},
+            imperativeMethods: undefined
+        }
+
+        constructor(props: Props) {
+            super(props)
+            this.render = bindContexts(
+                this.__hooks__.contexts,
+                bindComponent(this, renderFunc)
+            )
+        }
+
+        componentWillMount() {
+            runEffects(this.__hooks__.layoutEffects)
+        }
+
+        componentDidMount() {
+            runEffects(this.__hooks__.effects)
+        }
+
+        componentWillUpdate() {
+            runEffects(this.__hooks__.effects)
+            runEffects(this.__hooks__.layoutEffects)
+        }
+
+        componentWillUnmount() {
+            cleanupEffects(this.__hooks__.effects)
+            cleanupEffects(this.__hooks__.layoutEffects)
+        }
+
     } as React.ComponentClass<Props, HooksComponentState>
+
     HooksComponentClass.displayName = (renderFunc as any).name
     return HooksComponentClass
 }
-
-// export function withHooks<Props>(rawRenderFunc: (props: Props) => React.ReactNode): React.FunctionComponent<Props> {
-
-//   const componentClass = class extends React.Component<Props, IHooksComponentState> implements IHooksComponentExtension {
-//     public state: IHooksComponentState = {}
-//     public hooksEffect: IHooksComponentEffect = {}
-//     public hooksEffectDelayed: Array<() => void> = []
-//     public hooksContext: IHooksComponentContext = {}
-
-//     private readonly renderFunc: () => React.ReactNode
-
-//     constructor(props: Props) {
-//       super(props)
-
-//       // renderFunc 绑定 Hooks Context
-//       const renderFunc = () => {
-//         hooksContextPush(this)
-//         const renderResult = rawRenderFunc(this.props)
-//         hooksContextPop()
-//         return renderResult
-//       }
-
-//       // 初始化执行
-//       renderFunc()
-
-//       // 看环境是否使用了 Context
-//       const contexts = Object
-//         .getOwnPropertyNames(this.hooksContext)
-//         .map((useContextNu) => [useContextNu, this.hooksContext[parseInt(useContextNu)][1]]) as Array<[number, React.Context<any>]>
-
-//       // 若使用 Context，则绑定所有 Context
-//       if (contexts.length > 0) {
-//         this.renderFunc = contexts.reduceRight((lastRenderFunc, [useContextNu, context]) => () => (
-//           <context.Consumer>
-//             {value => {
-//               // 将 Context 更新的值存进 hooksContext 里面，以便 useContext 能更新所需要的值
-//               this.hooksContext[useContextNu] = [value, context]
-//               return lastRenderFunc()
-//             }}
-//           </context.Consumer>
-//         ), renderFunc)
-//       } else {
-//         this.renderFunc = renderFunc
-//       }
-
-//       // 清理，避免 Effect 提前执行
-//       this.hooksEffectDelayed = []
-//       this.hooksEffect = {}
-//     }
-
-//     // 执行 Effect
-//     public runEffect() {
-//       for (const effectFunc of this.hooksEffectDelayed) {
-//         effectFunc()
-//       }
-//       this.hooksEffectDelayed = []
-//     }
-
-//     // 清除 Effect
-//     public cleanupEffect() {
-//       for (const useEffectNu of Object.getOwnPropertyNames(this.hooksEffect)) {
-//         const [cleanup] = this.hooksEffect[parseInt(useEffectNu)]
-//         if (cleanup) {
-//           cleanup()
-//         }
-//       }
-//       this.hooksEffect = {}
-//     }
-
-//     public componentDidUpdate() {
-//       this.runEffect()
-//     }
-
-//     public componentDidMount() {
-//       this.runEffect()
-//     }
-
-//     public componentWillUnmount() {
-//       this.cleanupEffect()
-//     }
-
-//     public render() {
-//       return this.renderFunc()
-//     }
-
-//   }
-
-//   // 获取组件名
-//   Object.defineProperty(componentClass, 'name', { get: () => (rawRenderFunc as any).name })
-//   return componentClass as any
-// }

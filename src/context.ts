@@ -1,5 +1,3 @@
-import * as React from 'react'
-import { HooksComponentState } from './hooks/state';
 import {HooksComponent} from './hooks-component'
 
 interface HooksContext {
