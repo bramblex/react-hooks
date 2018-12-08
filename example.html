@@ -17,13 +17,30 @@
     <div id="app"></div>
 
     <script type="text/babel">
-        const {withHooks, useState, useContext, useReducer} = ReactHooks
+        const {
+            withHooks, 
+            useState, 
+            useContext, 
+            useReducer, 
+            useCallback,
+            useMemo,
+            useRef,
+            useEffect,
+            useLayoutEffect,
+            useImperativeMethods
+        } = ReactHooks
         const appContainer = document.querySelector('#app');
 
         const countContext = React.createContext(0)
 
-        const Increase = withHooks(function Increase({ dispatch }){
+        const Increase = withHooks(function Increase({ dispatch }, ref){
+            window.ref = ref
             const count = useContext(countContext)
+            useImperativeMethods(ref, () => {
+                return {
+                    ['hello'+count]: () => {console.log('hello' + count)}
+                }
+            }, [count])
             return <button onClick={() => dispatch({type: 'increase'})}> + </button>
         }) 
 
@@ -41,14 +58,15 @@
             throw new Error()
         }
 
-        let a
-        const App = withHooks(function App(){
+        const App = withHooks(function App({}){
             const [count, dispatch] = useReducer(reducer,0)
-            console.log(a, dispatch, a === dispatch)
-            a = dispatch
+
+            const ref = useRef()
+            window.ref = ref
+            
             return (
                 <countContext.Provider value={count}>
-                <div style={{ textAlign: 'center' }}>
+                <div ref={ref} style={{ textAlign: 'center' }}>
                     <h1>React Hooks Example</h1>
                     <Increase dispatch={dispatch}/>
                     | Count: { count } |

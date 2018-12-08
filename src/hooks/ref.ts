@@ -45,6 +45,7 @@ export function useImperativeMethods<T extends {}>(ref: React.RefObject<HooksCom
                 Object.getOwnPropertyNames(instance).forEach((name) => {
                     (component as any)[name] = (instance as any)[name]
                 })
+                component.__hooks__.imperativeMethods = [instance, inputs]
             }
         }
     }

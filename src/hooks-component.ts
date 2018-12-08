@@ -9,6 +9,7 @@ import { withContext } from './context';
 export declare class HooksComponent<Props extends {} = {}> extends React.Component<Props, HooksComponentState> {
     public state: HooksComponentState
     public __hooks__: {
+        ref: React.RefObject<HooksComponent<Props>>,
         setters: HooksComponentStateSetters,
         dispatchers: HooksComponentStateDispatchers,
         refs: HooksComponentRefs,
@@ -24,16 +25,16 @@ export type RenderFunc<Props extends {} = {}>
     = (props: Props, ref: React.RefObject<HooksComponent<Props>>) => React.ReactNode
 
 
-export function bindComponent<Props extends {}>(component: HooksComponent<Props>, renderFunc: RenderFunc<Props>) {
-    const ref = React.createRef<HooksComponent<Props>>();
-    (ref as any).current = component
+export function bindComponent<Props extends {}>(ref: React.RefObject<HooksComponent<Props>>, renderFunc: RenderFunc<Props>) {
+    const component = ref.current as HooksComponent<Props>
     return withContext(component, () => renderFunc(component.props, ref))
 }
 
-export function withHooks<Props extends {}>(renderFunc: RenderFunc<Props>): React.ComponentClass<Props, HooksComponentState> {
+export function withHooks<Props extends React.RefAttributes<any>>(renderFunc: RenderFunc<Props>): React.ComponentClass<Props, HooksComponentState> {
     const HooksComponentClass = class extends React.Component<Props, HooksComponentState> {
         public state: HooksComponent['state'] = {}
-        public __hooks__: HooksComponent['__hooks__'] = {
+        public __hooks__: HooksComponent<Props>['__hooks__'] = {
+            ref: React.createRef(),
             setters: {},
             dispatchers: {},
             effects: {},
@@ -41,14 +42,15 @@ export function withHooks<Props extends {}>(renderFunc: RenderFunc<Props>): Reac
             refs: {},
             contexts: {},
             memos: {},
-            imperativeMethods: undefined
+            imperativeMethods: undefined,
         }
 
         constructor(props: Props) {
-            super(props)
+            super(props);
+            (this.__hooks__.ref as any).current = this
             this.render = bindContexts(
                 this.__hooks__.contexts,
-                bindComponent(this, renderFunc)
+                bindComponent(this.__hooks__.ref, renderFunc)
             )
         }
 
