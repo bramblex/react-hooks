@@ -41,9 +41,7 @@ const FakeComponent3 = fakeWithHooks(function FakeComponent() {
     const [state, dispatch] = useReducer<number>(reducer, 0)
     const [state2, dispatch2] = useReducer<number>(reducer, 0, { type: 'init' })
     useEffect(() => {
-        console.log(state)
         dispatch({ type: 'add', payload: 2 })
-        console.log(state)
     })
     return null
 })

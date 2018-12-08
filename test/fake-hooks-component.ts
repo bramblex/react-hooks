@@ -8,7 +8,8 @@ import { RenderFunc, HooksComponent, bindComponent } from '../src/hooks-componen
 export function fakeWithHooks<Props extends {}>(renderFunc: RenderFunc<Props>): React.ComponentClass<Props, HooksComponentState> {
     const HooksComponentClass = class {
         public state: HooksComponent['state'] = {}
-        public __hooks__: HooksComponent['__hooks__'] = {
+        public __hooks__: HooksComponent<Props>['__hooks__'] = {
+            ref: React.createRef(),
             setters: {},
             dispatchers: {},
             effects: {},
@@ -23,10 +24,11 @@ export function fakeWithHooks<Props extends {}>(renderFunc: RenderFunc<Props>): 
         public props: Props
 
         constructor(props: Props) {
-            this.props = props
+            this.props = props;
+            (this.__hooks__.ref as any).current = this
             this.render = bindContexts(
                 this.__hooks__.contexts,
-                bindComponent(this as any, renderFunc)
+                bindComponent(this.__hooks__.ref, renderFunc)
             )
         }
 
