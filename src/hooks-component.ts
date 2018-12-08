@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { HooksComponentState } from './hooks/state'
+import { HooksComponentState, HooksComponentStateSetters, HooksComponentStateDispatchers } from './hooks/state'
 import { HooksComponentMemos } from './hooks/memo'
 import { HooksComponentRefs, HooksComponentImperativeMethods } from './hooks/ref'
 import { HooksComponentContexts, bindContexts } from './hooks/context'
@@ -9,6 +9,8 @@ import { withContext } from './context';
 export declare class HooksComponent<Props extends {} = {}> extends React.Component<Props, HooksComponentState> {
     public state: HooksComponentState
     public __hooks__: {
+        setters: HooksComponentStateSetters,
+        dispatchers: HooksComponentStateDispatchers,
         refs: HooksComponentRefs,
         memos: HooksComponentMemos,
         contexts: HooksComponentContexts,
@@ -32,6 +34,8 @@ export function withHooks<Props extends {}>(renderFunc: RenderFunc<Props>): Reac
     const HooksComponentClass = class extends React.Component<Props, HooksComponentState> {
         public state: HooksComponent['state'] = {}
         public __hooks__: HooksComponent['__hooks__'] = {
+            setters: {},
+            dispatchers: {},
             effects: {},
             layoutEffects: {},
             refs: {},

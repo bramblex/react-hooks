@@ -17,18 +17,44 @@
     <div id="app"></div>
 
     <script type="text/babel">
-        const {withHooks, useState} = ReactHooks
+        const {withHooks, useState, useContext, useReducer} = ReactHooks
         const appContainer = document.querySelector('#app');
 
+        const countContext = React.createContext(0)
+
+        const Increase = withHooks(function Increase({ dispatch }){
+            const count = useContext(countContext)
+            return <button onClick={() => dispatch({type: 'increase'})}> + </button>
+        }) 
+
+        const Decrease = withHooks(function Decrease({ dispatch }){
+            const count = useContext(countContext)
+            return <button onClick={() => dispatch({type: 'decrease'})}> - </button>
+        })
+
+        const reducer = (count, {type}) => {
+            if (type === 'increase') {
+                return count + 1
+            } else if (type === 'decrease') {
+                return count - 1
+            }
+            throw new Error()
+        }
+
+        let a
         const App = withHooks(function App(){
-            const [count, setCount] = useState(0)
+            const [count, dispatch] = useReducer(reducer,0)
+            console.log(a, dispatch, a === dispatch)
+            a = dispatch
             return (
+                <countContext.Provider value={count}>
                 <div style={{ textAlign: 'center' }}>
                     <h1>React Hooks Example</h1>
-                    <button onClick={() => setCount(count - 1)}> - </button>
+                    <Increase dispatch={dispatch}/>
                     | Count: { count } |
-                    <button onClick={() => setCount(count + 1)}> + </button>
+                    <Decrease dispatch={dispatch}/>
                 </div>
+                </countContext.Provider>
             )
         })
 

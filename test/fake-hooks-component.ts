@@ -9,6 +9,8 @@ export function fakeWithHooks<Props extends {}>(renderFunc: RenderFunc<Props>): 
     const HooksComponentClass = class {
         public state: HooksComponent['state'] = {}
         public __hooks__: HooksComponent['__hooks__'] = {
+            setters: {},
+            dispatchers: {},
             effects: {},
             layoutEffects: {},
             refs: {},

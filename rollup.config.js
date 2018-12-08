@@ -14,6 +14,6 @@ export default {
     plugins: [
         typescript(),
         buble(),
-        uglify()
+        // uglify()
     ]
 }
