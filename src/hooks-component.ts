@@ -30,7 +30,7 @@ export function bindComponent<Props extends {}>(ref: React.RefObject<HooksCompon
     return withContext(component, () => renderFunc(component.props, ref))
 }
 
-export function withHooks<Props extends React.RefAttributes<any>>(renderFunc: RenderFunc<Props>): React.ComponentClass<Props, HooksComponentState> {
+export function withHooks<Props extends {}>(renderFunc: RenderFunc<Props>): React.ComponentClass<Props, HooksComponentState> {
     const HooksComponentClass = class extends React.Component<Props, HooksComponentState> {
         public state: HooksComponent['state'] = {}
         public __hooks__: HooksComponent<Props>['__hooks__'] = {
