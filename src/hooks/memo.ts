@@ -22,6 +22,6 @@ export function useMemo<T>(computedFunc: () => T, inputs?: HooksInputs) {
     return componentMemos[counter][0]
 }
 
-export function useCallback<T>(callback: () => T, inputs?: HooksInputs): () => T {
-    return useMemo<() => T>(() => callback, inputs)
+export function useCallback<T>(callback: T, inputs?: HooksInputs): T {
+    return useMemo<T>(() => callback, inputs)
 }
