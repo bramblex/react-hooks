@@ -6,7 +6,7 @@ export interface HooksComponentMemos {
     [counter: number]: [any, HooksInputs | undefined]
 }
 
-export function useMemo<T>(computedFunc: () => T, inputs?: HooksInputs) {
+export function useMemo<T>(computedFunc: () => T, inputs?: HooksInputs): T {
     const { component, counter } = useCounter()
     const componentMemos: { [counter: number]: [T, HooksInputs | undefined] }
         = component.__hooks__.memos
@@ -22,6 +22,6 @@ export function useMemo<T>(computedFunc: () => T, inputs?: HooksInputs) {
     return componentMemos[counter][0]
 }
 
-export function useCallback<T>(callback: T, inputs?: HooksInputs): T {
-    return useMemo<T>(() => callback, inputs)
+export function useCallback<Args extends any[], Ret>(callback: (...args: Args) => Ret, inputs?: HooksInputs): (...args: Args) => Ret {
+    return useMemo(() => callback, inputs)
 }

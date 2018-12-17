@@ -29,7 +29,7 @@ export function bindContexts(contexts: HooksComponentContexts, renderFunc: () =>
     }
 }
 
-export function useContext<T>(context: React.Context<T>) {
+export function useContext<T>(context: React.Context<T>): T {
     const { component, counter } = useCounter()
     const componentContexts = component.__hooks__.contexts
     if (!componentContexts.hasOwnProperty(counter)) {

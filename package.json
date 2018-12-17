@@ -1,6 +1,6 @@
 {
   "name": "blx-react-hooks",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "main": "dist/react-hooks.min.js",
   "types": "src/index.ts",
   "repository": "git@github.com:bramblex/react-hooks.git",
