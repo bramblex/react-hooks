@@ -1,4 +1,3 @@
-import * as React from 'react'
 import { useCounter } from "../context"
 import { HooksInputs, inputsChange } from "../inputs";
 

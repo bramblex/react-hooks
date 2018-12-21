@@ -1,4 +1,3 @@
-import * as React from 'react'
 import { useCounter } from "../context";
 
 export interface HooksComponentState {
