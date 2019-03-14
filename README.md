@@ -1,7 +1,6 @@
 # react-hooks
 
-React Hooks API 在低版本 React 16.6 下面的一个实现，可以在不升级 React 版本的前提下体验新的 React Hooks API。（虽然指实现了三个 Basic API
-
+React Hooks API 在低版本 React 16.6 下面的一个实现，可以在不升级 React 版本的前提下体验新的 React Hooks API。
 ## Install
 
 ```
@@ -11,7 +10,7 @@ yarn add blx-react-hooks
 ```
 
 ## Usage
-在声明函数式组件的时候，通过用 `withHooks()` 函数封装就可以就使用 `useState()` / `useEffect()` / `useContext()` 三个 Hooks API 了。与 React 的 Hooks API 只差了需要 `withHooks()` 函数进行封装。
+在声明函数式组件的时候，通过用 `withHooks()` 函数封装就可以就使用 Hooks API 了。与 React 的 Hooks API 只差了需要 `withHooks()` 函数进行封装。
 
 ```JSX
 import {withHooks, useState} from 'blx-react-hooks'
@@ -35,9 +34,11 @@ const Counter = withHooks(function Counter({title, initCount}) {
 ## API
 
 * withHooks
-* useState
-* useEffect
+* useState / useReducer
+* useEffect / useLayoutEffect
 * useContext
+* useRef / useImperativeMethods
+* useMemo / useCallback
 
 
 ## Document
