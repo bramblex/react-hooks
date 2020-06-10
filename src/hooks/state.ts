@@ -28,10 +28,8 @@ export function useState<T>(defaultState: State<T>): [T, SetState<T>] {
         }
 
         componentSetters[counter] = (state, callback?) => {
-            const componentState: { [counter: number]: T } = component.state
             if (typeof state === 'function') {
-                const oldState = componentState[counter] as T
-                component.setState({ [counter]: (state as (oldState: T) => T)(oldState) }, callback)
+                component.setState((newState) => ({ [counter]: state(newState) }), callback)
             } else {
                 component.setState({ [counter]: state }, callback)
             }
