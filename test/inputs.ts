@@ -10,3 +10,4 @@ assert.equal(inputsChange([1], [1, 2]), true)
 const obj = {}
 assert.equal(inputsChange([obj], [obj]), false)
 assert.equal(inputsChange([1, 2, 3], [1, 2, 3]), false)
+assert.equal(inputsChange([NaN], [NaN]), false)
